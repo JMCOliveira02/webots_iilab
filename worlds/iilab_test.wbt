@@ -1,0 +1,82 @@
+#VRML_SIM R2023b utf8
+
+WorldInfo {
+}
+Viewpoint {
+  fieldOfView 2
+  orientation -0.11043664686264973 -0.894748757940231 0.4326989798857263 5.727443876425732
+  position -8.030969579922374 4.3609521484966125 2.4727025532448246
+  exposure 5
+  follow "iilab:solid"
+  followType "None"
+}
+DirectionalLight {
+  ambientIntensity 0.5
+  direction 0 -1 -1
+  castShadows TRUE
+}
+Solid {
+  translation 17.79 -9.92 -0.50004
+  rotation 1 0 0 1.5708
+  children [
+    Solid {
+      translation -26.35 2.09 -1.18
+      rotation -2.653589999981315e-06 -0.9999999999929585 -2.653589999981315e-06 -1.5707953071795862
+    }
+    CadShape {
+      url [
+        "../objects/iilab.obj"
+      ]
+    }
+  ]
+  name "iilab"
+  boundingObject Mesh {
+    url [
+      "../objects/iilab.obj"
+    ]
+  }
+}
+Solid {
+  translation 0 0 -0.5
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          ambientIntensity 0.5
+          diffuseColor 0.3 0.3 0.3
+          shininess 0
+        }
+      }
+      geometry Plane {
+        size 100 100
+      }
+    }
+  ]
+  name "GroundPlane"
+  boundingObject Plane {
+    size 100 100
+  }
+}
+Background {
+  skyColor [
+    0.14 0.14 0.14
+  ]
+}
+DEF ROBOT Robot {
+  translation -4.8338 4.93273 0.5
+  rotation 0 0 1 0.26958312851319716
+  children [
+    Lidar {
+      rotation 1 0 0 3.14159
+      name "lidar2D"
+      fieldOfView 6.28319
+      numberOfLayers 1
+      maxRange 10
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.2
+  }
+  controller "supervisor"
+  supervisor TRUE
+}
