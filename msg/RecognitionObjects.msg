@@ -1,2 +1,2 @@
 Header header
-webots_ros/RecognitionObject[] objects
+webots_iilab/RecognitionObject[] objects
