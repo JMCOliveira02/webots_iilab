@@ -23,3 +23,11 @@ git clone https://github.com/JMCOliveira02/webots_iilab.git
   * Objects: Some .obj files that can be imported by the world files
     * iilab.obj
   * Src: This folder is where the code for ROS nodes should go.
+
+## Usage
+* Run roscore
+* Open webots and open world titled "iilab_test.wbt"
+* Select the robot in the scene tree and make sure the controller is "supervisor"
+  * It is possible to configure the ROS topics of communication within the Supervisor source code
+  * Reload the simulation, to restart the controller
+* It should now be possible to control the robot and read the lidar scan through the designated topics 

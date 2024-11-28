@@ -77,6 +77,6 @@ DEF ROBOT Robot {
   boundingObject Sphere {
     radius 0.2
   }
-  controller "ros"
+  controller "supervisor"
   supervisor TRUE
 }
