@@ -4,7 +4,7 @@ project(webots_iilab)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs sensor_msgs message_generation tf moveit_ros_planning_interface)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs sensor_msgs message_generation tf moveit_ros_planning_interface pcl_ros pcl_conversions)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -168,7 +168,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs sensor_msgs messag
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES webots_ros
+   LIBRARIES webots_iilab
    CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs message_runtime tf
 #  DEPENDS system_lib
 )
@@ -185,5 +185,10 @@ include_directories(
 #############
 ## Install ##
 #############
+
+
+add_executable(pointcloud_saver src/pointcloud_saver.cpp)
+target_link_libraries(pointcloud_saver ${catkin_LIBRARIES})
+
 
 
