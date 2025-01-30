@@ -190,5 +190,9 @@ include_directories(
 add_executable(pointcloud_saver src/pointcloud_saver.cpp)
 target_link_libraries(pointcloud_saver ${catkin_LIBRARIES})
 
+catkin_install_python(PROGRAMS
+    src/pose_estimate.py  # Add your Python script here
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 

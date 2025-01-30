@@ -1,0 +1,86 @@
+#VRML_SIM R2023b utf8
+
+WorldInfo {
+}
+Viewpoint {
+  fieldOfView 2
+  orientation 0.3917562526545327 -0.3620997347625779 -0.8458196146879953 4.468668925891755
+  position 6.5421154749723245 -15.015528135282596 29.27564340246893
+  exposure 5
+  follow "robot"
+  followType "None"
+}
+DirectionalLight {
+  ambientIntensity 0.5
+  castShadows TRUE
+}
+Solid {
+  translation 1.58 1.15 -0.5
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          ambientIntensity 0.5
+          diffuseColor 0.3 0.3 0.3
+          shininess 0
+        }
+      }
+      geometry Plane {
+        size 100 100
+      }
+    }
+  ]
+  name "GroundPlane"
+  boundingObject Plane {
+    size 100 100
+  }
+}
+Background {
+  skyColor [
+    0.14 0.14 0.14
+  ]
+}
+Solid {
+  translation -1.51 -1.67 -0.49999
+  rotation 1 0 0 1.5708
+  children [
+    CadShape {
+      url [
+        "../objects/Map_test.obj"
+      ]
+    }
+  ]
+  name "L_scenario"
+  boundingObject Mesh {
+    url [
+      "../objects/Map_test.obj"
+    ]
+  }
+}
+DEF ROBOT Robot {
+  translation 2.07 3.19 0.33
+  children [
+    Lidar {
+      rotation 1 0 0 3.14
+      name "lidar3D"
+      horizontalResolution 2400
+      fieldOfView 6.28318
+      verticalFieldOfView 1.57
+      numberOfLayers 40
+      maxRange 20
+    }
+    Lidar {
+      translation 0 0 -1.05084e-05
+      rotation 1 0 0 3.14159
+      name "lidar2D"
+      fieldOfView 6.28319
+      numberOfLayers 1
+      maxRange 10
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.2
+  }
+  controller "ros_interface"
+  supervisor TRUE
+}

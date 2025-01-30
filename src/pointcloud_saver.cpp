@@ -57,12 +57,12 @@ void pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr &msg)
     pcl::fromROSMsg(*msg, cloud);
 
     // Save to a PCD file
-    std::string pcl_filename = "dataset/B2/pcl/pointcloud" + std::to_string(index_file) + ".pcd";
+    std::string pcl_filename = "dataset/L_scenario/A/central_pcd" + std::to_string(index_file) + ".pcd";
     if (pcl::io::savePCDFileASCII(pcl_filename, cloud) == 0)
     {
         ROS_INFO("Saved point cloud to %s", pcl_filename.c_str());
         // Save the pose to a text file
-        std::string pose_filename = "dataset/B2/pose/pose" + std::to_string(index_file) + ".txt";
+        std::string pose_filename = "dataset/L_scenario/A/central_pose" + std::to_string(index_file) + ".txt";
         savePoseToFile(targetPose, pose_filename);
         pointCloudSaved = true; // Set flag to indicate success
         index_file++;
@@ -102,11 +102,11 @@ int main(int argc, char **argv)
     int timeout = 100;  // Maximum wait time (in loops)
     int count = 0;
 
-    float x_min = -10.0;
-    float x_max = -5.5;
+    float x_min = 12.3;
+    float x_max = 12.3;
     float x_spacing = 0.5;
-    float y_min = 8.2;
-    float y_max = 11.2;
+    float y_min = 6.8;
+    float y_max = 6.8;
     float y_spacing = 0.5;
 
     // Calculate the number of grid points

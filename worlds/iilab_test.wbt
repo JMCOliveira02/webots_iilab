@@ -4,8 +4,8 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 2
-  orientation -0.3774066554860055 0.402720722955733 0.8338946190597941 1.6872603287935808
-  position -7.713619337220173 4.6759266825239925 5.158456610606125
+  orientation 0.3621261839710109 0.08265600738560458 -0.9284571133475495 2.7307287338746415
+  position 15.026334564803044 29.13532068760533 22.47729727466737
   exposure 5
   follow "robot"
   followType "None"
@@ -37,7 +37,7 @@ Solid {
   }
 }
 Solid {
-  translation 0 0 -0.5
+  translation 1.58 1.15 -0.5
   children [
     Shape {
       appearance Appearance {
@@ -62,8 +62,25 @@ Background {
     0.14 0.14 0.14
   ]
 }
+Solid {
+  translation 0 17.04 -0.5
+  rotation 1 0 0 1.5708
+  children [
+    CadShape {
+      url [
+        "../objects/Map_test.obj"
+      ]
+    }
+  ]
+  name "L_scenario"
+  boundingObject Mesh {
+    url [
+      "../objects/Map_test.obj"
+    ]
+  }
+}
 DEF ROBOT Robot {
-  translation -5.5 11.199999809265137 0.33
+  translation 4.85 25.38 1.58
   rotation 0 1 0 0
   children [
     Lidar {
