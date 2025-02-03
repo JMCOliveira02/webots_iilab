@@ -1,4 +1,4 @@
-build/release/ros_interface.o: ros_interface.cpp \
+build/release/ros_interface.o: ros_interface.cpp SimpleRobot.hpp \
  /usr/local/webots/include/controller/cpp/webots/Supervisor.hpp \
  /usr/local/webots/include/controller/cpp/webots/Device.hpp \
  /usr/local/webots/include/controller/cpp/webots/../../c/webots/types.h \
@@ -10,5 +10,4 @@ build/release/ros_interface.o: ros_interface.cpp \
  /usr/local/webots/include/controller/cpp/webots/../../c/webots/lidar_point.h \
  Ros.hpp highlevel/RosControl.hpp highlevel/WebotsHW.hpp \
  /usr/local/webots/include/controller/cpp/webots/Motor.hpp \
- /usr/local/webots/include/controller/cpp/webots/PositionSensor.hpp \
- Robot.hpp
+ /usr/local/webots/include/controller/cpp/webots/PositionSensor.hpp

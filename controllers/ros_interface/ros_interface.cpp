@@ -1,31 +1,22 @@
-#include <webots/Supervisor.hpp>
-#include <webots/Lidar.hpp>
-
-#include "Ros.hpp"
-#include "Robot.hpp"
-#include "geometry_msgs/Twist.h"
-#include "geometry_msgs/Pose.h"
-#include <sensor_msgs/LaserScan.h>
-#include <sensor_msgs/PointCloud2.h>
-#include <sensor_msgs/point_cloud2_iterator.h>
-#include "tf2_ros/transform_broadcaster.h"
-#include <tf2/LinearMath/Matrix3x3.h>
-#include <tf2/LinearMath/Quaternion.h>
-
+#include "SimpleRobot.hpp"
 
 using namespace webots;
 
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "robot");
-
-    SimpleRobot robot;
-
+    ros::init(argc, argv, "robot_1");
+    printf("ROS node initialized\n");
+    SimpleRobot robot_1;
+    robot_1.dataset_creator = false;
+    printf("Robot initialized\n");
     // Main loop
-    while (robot.supervisor->step(robot.timeStep) != -1 && ros::ok()) {
+    while (robot_1.supervisor->step(robot_1.timeStep) != -1 && ros::ok()) {
         ros::spinOnce();
-        
-        robot.advertiseTransform();
+        robot_1.advertiseTransform();
+        robot_1.publishLidar2D();
+        robot_1.publishLidar3D();
+        robot_1.teleop_cmd_vel();
+        robot_1.set_position();
     }
 
     return 0;

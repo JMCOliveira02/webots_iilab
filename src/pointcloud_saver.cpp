@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     ros::Publisher posePub = nh.advertise<geometry_msgs::Pose>("/set_position", 1);
 
     // Subscriber for the PointCloud2 topic
-    ros::Subscriber sub = nh.subscribe("/pointcloud3D", 1, pointCloudCallback);
+    ros::Subscriber sub = nh.subscribe("/scan3D", 1, pointCloudCallback);
 
     targetPose.position.z = 0.33;
     targetPose.orientation.x = 0.0;

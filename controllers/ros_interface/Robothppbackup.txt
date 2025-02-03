@@ -31,10 +31,20 @@ public:
     Lidar *lidar2D;
     int numRays2D;
     double minRange2D, maxRange2D, fov2D;
-
-    ros::Publisher lidar2DPub = n.advertise<sensor_msgs::LaserScan>("scan2D", 10);
-    sensor_msgs::LaserScan scanMsg2D;
     const float *ranges2D;
+
+    sensor_msgs::LaserScan scanMsg2D;
+    ros::Publisher lidar2DPub = n.advertise<sensor_msgs::LaserScan>("scan2D", 10);
+
+    // 3D Lidar
+    Lidar *lidar3D;
+    int numRays3D, numLayers3D;
+    double minRange3D, maxRange3D, fov3D;
+    const float *ranges3D;
+
+    sensor_msgs::PointCloud2 scanMsg3D;
+    ros::Publisher lidar3DPub = n.advertise<sensor_msgs::PointCloud2>("scan3D", 10);
+
     
     SimpleRobot() {
 
@@ -44,11 +54,12 @@ public:
         timeStep = static_cast<int>(supervisor->getBasicTimeStep());
 
         // Initialize and enable 2D Lidar
+        lidar2D = supervisor->getLidar("lidar2D");
         lidar2D->enable(timeStep);
-        int numRays2D = lidar2D->getHorizontalResolution();
-        double minRange2D = lidar2D->getMinRange();
-        double maxRange2D = lidar2D->getMaxRange();
-        double fov2D = lidar2D->getFov();
+        numRays2D = lidar2D->getHorizontalResolution();
+        minRange2D = lidar2D->getMinRange();
+        maxRange2D = lidar2D->getMaxRange();
+        fov2D = lidar2D->getFov();
         scanMsg2D.header.frame_id = "robot";
         scanMsg2D.angle_min = -fov2D / 2.0;
         scanMsg2D.angle_max = fov2D / 2.0;
@@ -57,19 +68,33 @@ public:
         scanMsg2D.scan_time = timeStep / 1000.0;
         scanMsg2D.range_min = minRange2D;
         scanMsg2D.range_max = maxRange2D;
+
+        // Initialize and enable 3D Lidar
+        lidar3D = supervisor->getLidar("lidar3D");
+        lidar3D->enable(timeStep);
+        numRays3D = lidar3D->getHorizontalResolution();
+        minRange3D = lidar3D->getMinRange();
+        maxRange3D = lidar3D->getMaxRange();
+        numLayers3D = lidar3D->getNumberOfLayers();
+        fov3D = lidar3D->getFov();
+        scanMsg3D.header.frame_id = "robot";
+        scanMsg3D.height = 1;
+        scanMsg3D.is_dense = false;
+        sensor_msgs::PointCloud2Modifier modifier(scanMsg3D);
+        modifier.setPointCloud2FieldsByString(1, "xyz");
+        modifier.resize(numRays3D * numLayers3D);
+    
     }
 
     void advertiseTransform() {
         position = simpleRobot_node->getPosition();
         rotation = simpleRobot_node->getOrientation();
-        
         tf2::Matrix3x3 mat(rotation[0], rotation[1], rotation[2], 
                            rotation[3], rotation[4], rotation[5], 
                            rotation[6], rotation[7], rotation[8]);
 
         tf2::Quaternion quaternion;
         mat.getRotation(quaternion);
-        
         geometry_msgs::TransformStamped transformMsg;
         transformMsg.header.stamp = ros::Time::now();
         transformMsg.header.frame_id = "world";
@@ -96,6 +121,36 @@ public:
             scanMsg2D.ranges[i] = (distance >= minRange2D && distance <= maxRange2D) ? distance : std::numeric_limits<float>::infinity();
         }
         lidar2DPub.publish(scanMsg2D);
+    }
+
+    void publishLidar3D() {
+        ranges3D = lidar3D->getRangeImage();
+        scanMsg3D.header.stamp = ros::Time::now();
+        sensor_msgs::PointCloud2Iterator<float> iter_x(scanMsg3D, "x");
+        sensor_msgs::PointCloud2Iterator<float> iter_y(scanMsg3D, "y");
+        sensor_msgs::PointCloud2Iterator<float> iter_z(scanMsg3D, "z");
+    
+        int idx = 0;
+        for (int layer = 0; layer < numLayers3D; ++layer) {
+            for (int ray = 0; ray < numRays3D; ++ray) {
+                float distance = ranges3D[idx++];
+                if (distance >= minRange3D && distance <= maxRange3D) {
+                    // Convert polar coordinates to Cartesian (x, y, z)
+                    double horizontal_angle = (ray / (double)numRays3D - 0.5) * fov3D;
+                    double vertical_angle = (layer / (double)numLayers3D - 0.5) * lidar3D->getVerticalFov();
+                    
+                    *iter_x = distance * cos(vertical_angle) * cos(horizontal_angle);
+                    *iter_y = distance * cos(vertical_angle) * sin(horizontal_angle);
+                    *iter_z = distance * sin(vertical_angle);
+                } else {
+                    // Invalid point
+                    *iter_x = *iter_y = *iter_z = std::numeric_limits<float>::quiet_NaN();
+                }
+                ++iter_x; ++iter_y; ++iter_z;
+            }
+        }
+        // Publish the 3D point cloud
+        lidar3DPub.publish(scanMsg3D);
     }
     
 };

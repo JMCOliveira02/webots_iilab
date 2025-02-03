@@ -4,11 +4,11 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 2
-  orientation 0.3917562526545327 -0.3620997347625779 -0.8458196146879953 4.468668925891755
-  position 6.5421154749723245 -15.015528135282596 29.27564340246893
+  orientation 0.21620132830352412 0.08622722116987785 -0.9725337279339533 2.401573756543711
+  position 5.5418086378785905 8.440240862710576 1.7032233239143315
   exposure 5
   follow "robot"
-  followType "None"
+  followType "Mounted Shot"
 }
 DirectionalLight {
   ambientIntensity 0.5
@@ -58,7 +58,8 @@ Solid {
   }
 }
 DEF ROBOT Robot {
-  translation 2.07 3.19 0.33
+  translation 2.951793530800067 8.101179757890469 0.33
+  rotation 0 0 -1 2.6120348836199847
   children [
     Lidar {
       rotation 1 0 0 3.14
@@ -75,7 +76,7 @@ DEF ROBOT Robot {
       name "lidar2D"
       fieldOfView 6.28319
       numberOfLayers 1
-      maxRange 10
+      maxRange 40
     }
   ]
   boundingObject Sphere {
