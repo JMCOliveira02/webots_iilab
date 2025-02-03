@@ -14,12 +14,14 @@
 #include <tf2/LinearMath/Quaternion.h>
 
 using namespace webots;
-
+/*  @param bool dataset_creator: define if the robot waits for position command before sending pointcloud (useful for dataset creation)
+    @param bool verbose */
 class SimpleRobot {
 public:
-    SimpleRobot();
+    SimpleRobot(bool dataset_creator = false, bool verbose = false);
     ~SimpleRobot();
 
+    bool verbose;
     void advertiseTransform();
     void publishLidar2D();
     void publishLidar3D();
@@ -80,8 +82,8 @@ public:
     ros::Subscriber set_position_sub;
 
     // Modes of operation
-    bool dataset_creator = false;
-    bool send_PCL = false;
+    bool dataset_creator;
+    bool send_PCL;
 
 };
 

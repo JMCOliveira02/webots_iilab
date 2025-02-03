@@ -1,10 +1,14 @@
 #include "SimpleRobot.hpp"
 
-SimpleRobot::SimpleRobot() {
-    // Initialize Webots supervisor
+SimpleRobot::SimpleRobot(bool dataset_creator, bool verbose) {
+        
+        SimpleRobot::dataset_creator = dataset_creator;
+        SimpleRobot::verbose = verbose;
+        // Initialize Webots supervisor
         supervisor = new webots::Supervisor();
         simpleRobot_node = supervisor->getSelf();
         timeStep = static_cast<int>(supervisor->getBasicTimeStep());
+        verbose ? printf("Supervisor initialized\n") : 0;
 
         // Initialize and enable 2D Lidar
         lidar2DPub = n.advertise<sensor_msgs::LaserScan>("scan2D", 10);
@@ -22,6 +26,7 @@ SimpleRobot::SimpleRobot() {
         scanMsg2D.scan_time = timeStep / 1000.0;
         scanMsg2D.range_min = minRange2D;
         scanMsg2D.range_max = maxRange2D;
+        verbose ? printf("2D Lidar initialized\n") : 0;
 
         // Initialize and enable 3D Lidar
         lidar3DPub = n.advertise<sensor_msgs::PointCloud2>("scan3D", 10);
@@ -38,14 +43,17 @@ SimpleRobot::SimpleRobot() {
         sensor_msgs::PointCloud2Modifier modifier(scanMsg3D);
         modifier.setPointCloud2FieldsByString(1, "xyz");
         modifier.resize(numRays3D * numLayers3D);
+        verbose ? printf("3D Lidar initialized\n") : 0;
 
         // Initialize teleoperation
         teleop_sub = n.subscribe("cmd_vel", 1, &SimpleRobot::teleop_cmd_vel_Callback, this);
+        verbose ? printf("Teleoperation initialized\n") : 0;
 
         // Initialize set_position
         set_position_sub = n.subscribe("set_position", 1, &SimpleRobot::set_position_Callback, this);
         translationField = simpleRobot_node->getField("translation");
         rotationField = simpleRobot_node->getField("rotation");
+        verbose ? printf("Set position initialized\n") : 0;
 
 }
 
@@ -55,6 +63,7 @@ SimpleRobot::~SimpleRobot() {
 }
 
 void SimpleRobot::advertiseTransform() {
+    verbose ? printf("Advertising transform...\n") : 0;
     position = simpleRobot_node->getPosition();
     rotation = simpleRobot_node->getOrientation();
     
@@ -79,9 +88,11 @@ void SimpleRobot::advertiseTransform() {
     transformMsg.transform.rotation.w = quaternion.w();
     
     tfBroadcaster.sendTransform(transformMsg);
+    verbose ? printf("Transform advertised\n") : 0;
 }
 
 void SimpleRobot::publishLidar2D() {
+    verbose ? printf("Publishing 2D Lidar...\n") : 0;
     ranges2D = lidar2D->getRangeImage();
     scanMsg2D.header.stamp = ros::Time::now();
     scanMsg2D.ranges.resize(numRays2D);
@@ -90,6 +101,7 @@ void SimpleRobot::publishLidar2D() {
         scanMsg2D.ranges[i] = (distance >= minRange2D && distance <= maxRange2D) ? distance : std::numeric_limits<float>::infinity();
     }
     lidar2DPub.publish(scanMsg2D);
+    verbose ? printf("2D Lidar published\n") : 0;
 }
 
 void SimpleRobot::publishLidar3D() {
@@ -97,6 +109,7 @@ void SimpleRobot::publishLidar3D() {
         if(!send_PCL) return;
         send_PCL = false;
     }
+    verbose ? printf("Publishing 3D Lidar...\n") : 0;
     ranges3D = lidar3D->getRangeImage();
     scanMsg3D.header.stamp = ros::Time::now();
     sensor_msgs::PointCloud2Iterator<float> iter_x(scanMsg3D, "x");
@@ -135,9 +148,11 @@ void SimpleRobot::publishLidar3D() {
 
     // Publish the 3D point cloud
     lidar3DPub.publish(scanMsg3D);
+    verbose ? printf("3D Lidar published\n") : 0;
 }
 
 void SimpleRobot::teleop_cmd_vel_Callback(const geometry_msgs::Twist::ConstPtr& msg) {
+    verbose ? printf("Teleoperation command received\n") : 0;
     v_robot = msg->linear.x;
     w_robot = msg->angular.z;
     cmd_vel_received = true;
@@ -153,10 +168,12 @@ void SimpleRobot::teleop_cmd_vel() {
     velocity_world[2] = rotation[6] * v_robot; 
     velocity_world[5] = w_robot;  
     simpleRobot_node->setVelocity(velocity_world);
+    verbose ? printf("Teleoperation command executed\n") : 0;
 
 }
 
 void SimpleRobot::set_position_Callback(const geometry_msgs::Pose::ConstPtr& msg) {
+    verbose ? printf("Set position received\n") : 0;
     set_position_translation[0] = msg->position.x;
     set_position_translation[1] = msg->position.y;
     set_position_translation[2] = msg->position.z;
@@ -184,4 +201,5 @@ void SimpleRobot::set_position() {
     if(dataset_creator){
         send_PCL = true;
     }
+    verbose ? printf("Set position executed\n") : 0;
 }
