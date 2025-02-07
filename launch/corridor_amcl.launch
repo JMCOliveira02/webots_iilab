@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Static Transform Broadcaster -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_broadcaster" args="0 0 0 0 0 0 map odom" />
+
+  <!-- Map Server -->
+  <node pkg="map_server" type="map_server" name="map_server" args="$(find webots_iilab)/maps/Corridor_3.yaml" />
+
+  <!-- AMCL -->
+  <node pkg="amcl" type="amcl" name="amcl" args="scan:=/scan2D"/>
+
+  <!-- RViz -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find webots_iilab)/rviz/corridor_amcl.rviz" />
+</launch>

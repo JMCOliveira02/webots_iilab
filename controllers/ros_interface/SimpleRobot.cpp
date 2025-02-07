@@ -4,6 +4,8 @@ SimpleRobot::SimpleRobot(bool dataset_creator, bool verbose) {
         
         SimpleRobot::dataset_creator = dataset_creator;
         SimpleRobot::verbose = verbose;
+
+
         // Initialize Webots supervisor
         supervisor = new webots::Supervisor();
         simpleRobot_node = supervisor->getSelf();
@@ -18,7 +20,7 @@ SimpleRobot::SimpleRobot(bool dataset_creator, bool verbose) {
         minRange2D = lidar2D->getMinRange();
         maxRange2D = lidar2D->getMaxRange();
         fov2D = lidar2D->getFov();
-        scanMsg2D.header.frame_id = "robot";
+        scanMsg2D.header.frame_id = "base_link";
         scanMsg2D.angle_min = -fov2D / 2.0;
         scanMsg2D.angle_max = fov2D / 2.0;
         scanMsg2D.angle_increment = fov2D / numRays2D;
@@ -37,7 +39,7 @@ SimpleRobot::SimpleRobot(bool dataset_creator, bool verbose) {
         maxRange3D = lidar3D->getMaxRange();
         numLayers3D = lidar3D->getNumberOfLayers();
         fov3D = lidar3D->getFov();
-        scanMsg3D.header.frame_id = "robot";
+        scanMsg3D.header.frame_id = "base_link";
         scanMsg3D.height = 1;
         scanMsg3D.is_dense = false;
         sensor_msgs::PointCloud2Modifier modifier(scanMsg3D);
@@ -75,8 +77,8 @@ void SimpleRobot::advertiseTransform() {
     mat.getRotation(quaternion);
     
     transformMsg.header.stamp = ros::Time::now();
-    transformMsg.header.frame_id = "world";
-    transformMsg.child_frame_id = "robot";
+    transformMsg.header.frame_id = "odom";
+    transformMsg.child_frame_id = "base_link";
     
     transformMsg.transform.translation.x = position[0];
     transformMsg.transform.translation.y = position[1];

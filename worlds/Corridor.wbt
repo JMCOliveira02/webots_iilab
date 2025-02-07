@@ -1,0 +1,168 @@
+#VRML_SIM R2023b utf8
+
+WorldInfo {
+}
+Viewpoint {
+  fieldOfView 2
+  orientation -0.5868550802314132 0.5681631791479534 0.576881024707064 2.110327563873591
+  position 28.369392338790007 1.2495574375840093 155.64460556392552
+  exposure 5
+  follow "robot"
+  followType "Mounted Shot"
+}
+DirectionalLight {
+  ambientIntensity 0.5
+  castShadows TRUE
+}
+Solid {
+  translation 4.68 0 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          ambientIntensity 0.5
+          diffuseColor 0.3 0.3 0.3
+          shininess 0
+        }
+      }
+      geometry Plane {
+        size 100 100
+      }
+    }
+  ]
+  name "GroundPlane"
+  boundingObject Plane {
+    size 100 100
+  }
+}
+Background {
+  skyColor [
+    0.14 0.14 0.14
+  ]
+}
+DEF ROBOT Robot {
+  translation 37.0873 -0.310826 0.37
+  rotation 0 0 1 -5.307179586466759e-06
+  children [
+    Lidar {
+      rotation 1 0 0 3.14
+      name "lidar3D"
+      horizontalResolution 2400
+      fieldOfView 6.28318
+      verticalFieldOfView 1.57
+      numberOfLayers 40
+      maxRange 0.1
+    }
+    Lidar {
+      rotation 1 0 0 3.14159
+      name "lidar2D"
+      horizontalResolution 180
+      fieldOfView 2.5
+      numberOfLayers 1
+      maxRange 5
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.2
+  }
+  controller "ros_interface"
+  supervisor TRUE
+}
+Solid {
+  translation 4.76 -1.99 1
+  children [
+    Shape {
+      geometry Cylinder {
+        radius 0.5
+      }
+    }
+  ]
+  name "Pillar_1"
+  boundingObject Cylinder {
+    radius 0.5
+  }
+}
+Solid {
+  translation 9.13 -1.99 1
+  children [
+    Shape {
+      geometry Cylinder {
+        radius 0.5
+      }
+    }
+  ]
+  name "Pillar_2"
+  boundingObject Cylinder {
+    radius 0.5
+  }
+}
+Solid {
+  translation 15.98 -1.99 1
+  children [
+    Shape {
+      geometry Cylinder {
+        radius 0.5
+      }
+    }
+  ]
+  name "Pillar_3"
+  boundingObject Cylinder {
+    radius 0.5
+  }
+}
+Solid {
+  translation 34.7 -1.99 1
+  children [
+    Shape {
+      geometry Cylinder {
+        radius 0.5
+      }
+    }
+  ]
+  name "Pillar_4"
+  boundingObject Cylinder {
+    radius 0.5
+  }
+}
+Solid {
+  translation 33.64 -1.99 1
+  children [
+    Shape {
+      geometry Cylinder {
+        radius 0.5
+      }
+    }
+  ]
+  name "Pillar_5"
+  boundingObject Cylinder {
+    radius 0.5
+  }
+}
+Solid {
+  translation 19.91 -3.03 1
+  children [
+    Shape {
+      geometry Box {
+        size 40 0.3 2
+      }
+    }
+  ]
+  name "wall_1"
+  boundingObject Box {
+    size 40 0.3 2
+  }
+}
+Solid {
+  translation 19.91 2.3 1
+  children [
+    Shape {
+      geometry Box {
+        size 40 0.3 2
+      }
+    }
+  ]
+  name "wall_2"
+  boundingObject Box {
+    size 40 0.3 2
+  }
+}
